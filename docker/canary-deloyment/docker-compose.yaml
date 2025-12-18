@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  {{INTERNAL_NAME_OF_SERVICE_APP_NAME_VERSION_A}}:
+    image: {{YOUR_SERVICE_APP_NAME_VERSION_A}}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.{{INTERNAL_NAME_OF_SERVICE_APP_NAME_VERSION_A}}.loadbalancer.server.port=80"
+    networks:
+      - {{NETWORK_NAME}}
+
+  {{INTERNAL_NAME_OF_SERVICE_APP_NAME_VERSION_B}}:
+    image: {{YOUR_SERVICE_APP_NAME_VERSION_B}}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.{{INTERNAL_NAME_OF_SERVICE_APP_NAME_VERSION_B}}.loadbalancer.server.port=80"
+    networks:
+      - {{NETWORK_NAME}}
+
+networks:
+  {{NETWORK_NAME}}:
+    external: true

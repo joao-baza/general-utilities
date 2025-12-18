@@ -1,0 +1,33 @@
+http:
+  routers:
+    {{YOUR_ROUTER_APP_NAME}}:
+      rule: "Host(`{{YOUR_APP_DOMAIN}}`)"
+      service: {{YOUR_SERVICEE_APP_NAME}}
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencryptresolver # Or another
+
+  services:
+    {{YOUR_SERVICEE_APP_NAME}}:
+      weighted:
+        # --- Sticky Session Configuration ---
+        # This section is optional; it ensures the user stays on the same version during the session.
+        # Very important if the app has frontend changes between versions to avoid loading assets from the wrong version.
+        sticky:
+          cookie:
+            name: "canary_sticky_cookie" # Name of the cookie that will be saved in the browser
+            secure: true                 # Must be true if using HTTPS
+            httpOnly: true               # Security: prevents access via JavaScript
+            sameSite: "None"             # Adjust as needed (Lax/Strict/None)
+        # --------------------------------------
+        
+        services:
+          - name: {{YOUR_SERVICE_APP_NAME_VERSION_A}}@docker
+            # Weight: Integer >= 0. Determines the traffic share relative to the sum of all weights.
+            # Example: Weight 9 in a total of 10 (9+1) = 90% of requests.
+            weight: 9
+          - name: {{YOUR_SERVICE_APP_NAME_VERSION_B}}@docker
+            # Example: Weight 1 in a total of 10 (9+1) = 10% of requests.
+            # The sum doesn't need to be 100. E.g., weights 3 and 1 would result in 75% and 25%.
+            weight: 1
